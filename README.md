@@ -5,22 +5,25 @@ Cada associado possui um voto por pauta, e as decisões são contabilizadas ao e
 
 ---
 
+
+```
 ## Tecnologias utilizadas
-Java 17
-Spring Boot 3.2
-Spring Data JPA + Hibernate
+Java 17 
+Spring Boot 3.2 
+Spring Data JPA + Hibernate 
 PostgreSQL 
 Lombok 
-springdoc-openapi (Swagger UI)
-Docker + Docker Compose
+springdoc-openapi (Swagger UI) 
+Docker + Docker Compose 
 Maven
-
+```
 ---
 
 ## Arquitetura e decisões de projeto
 
 ### Estrutura de pacotes
 
+```
 com.example.votacao
 ├── client/        # Facade de integração externa (CPF)
 ├── config/        # Configuração global (OpenAPI, tratamento de exceções)
@@ -31,6 +34,7 @@ com.example.votacao
 ├── mapper/        # Conversão entre entidade e DTO
 ├── repository/    # Interfaces Spring Data JPA
 └── service/       # Regras de negócio
+```
 
 A separação em camadas (controller → service → repository) mantém as responsabilidades claras e facilita testes unitários com mock por camada.
 
