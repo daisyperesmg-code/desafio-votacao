@@ -3,7 +3,6 @@ package com.example.votacao.service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

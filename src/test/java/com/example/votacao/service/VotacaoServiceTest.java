@@ -3,7 +3,6 @@ package com.example.votacao.service;
 import com.example.votacao.client.CpfClient;
 import com.example.votacao.config.exception.BusinessException;
 import com.example.votacao.config.exception.ResourceNotFoundException;
-import com.example.votacao.entity.Pauta;
 import com.example.votacao.entity.SessaoVotacao;
 import com.example.votacao.enums.TipoVoto;
 import com.example.votacao.enums.StatusVoto;
@@ -18,7 +17,6 @@ import org.mockito.*;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
