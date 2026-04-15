@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
 
     // Erros de negócio
@@ -53,6 +51,6 @@ public class GlobalExceptionHandler {
         LoggerFactory.getLogger(ex.getClass()).error("Erro inesperado em {}: {}",
                 request.getRequestURI(),
                 ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno, tente novamente");
     }
 }

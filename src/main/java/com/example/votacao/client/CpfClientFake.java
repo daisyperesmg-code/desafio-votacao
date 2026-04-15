@@ -8,7 +8,7 @@ import com.example.votacao.config.exception.ResourceNotFoundException;
 import com.example.votacao.enums.StatusVoto;
 
 @Component
-public class CpfClientFake {
+public class CpfClientFake implements CpfClient {
 
     private final Random random = new Random();
 

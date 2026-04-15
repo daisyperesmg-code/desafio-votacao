@@ -3,6 +3,8 @@ package com.example.votacao.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +18,11 @@ public class SessaoVotacao {
     @OneToOne
     private Pauta pauta;
 
-    private LocalDateTime inicio;
-    private LocalDateTime fim;
+    private Instant inicio;
+    private Instant fim;
+
+    public boolean sessaoEstaAberta() {
+        Instant agora = Instant.now();
+        return agora.isBefore(fim);
+    }
 }

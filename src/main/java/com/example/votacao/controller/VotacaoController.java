@@ -14,10 +14,11 @@ import com.example.votacao.dto.PautaDto;
 import com.example.votacao.dto.ResultadoDto;
 import com.example.votacao.dto.SessaoDto;
 import com.example.votacao.dto.VotoDto;
-import com.example.votacao.entity.SessaoVotacao;
 import com.example.votacao.service.VotacaoService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,19 @@ public class VotacaoController {
     @PostMapping("/pauta")
     @Operation(summary = "Criar uma nova pauta")
     @ApiResponse(responseCode = "201", description = "Pauta criada com sucesso")
-    @ApiResponse(responseCode = "400", description = "Erro de validação")
+    @ApiResponse(responseCode = "400", description = "Erro de validação", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+    @ApiResponse(responseCode = "422", description = "Já existe uma pauta com o mesmo título", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
     @ResponseStatus(HttpStatus.CREATED)
     public PautaDto criar(@RequestBody @Valid PautaDto dto) {
         return service.criarPauta(dto);
+    }
+
+    @GetMapping("/pauta/{id}")
+    @Operation(summary = "Obter pauta por ID")
+    @ApiResponse(responseCode = "200", description = "Pauta encontrada")
+    @ApiResponse(responseCode = "404", description = "Pauta não encontrada", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+    public PautaDto obterPauta(@PathVariable Long id) {
+        return service.obterPauta(id);
     }
 
     @PostMapping("/pauta/sessao")
@@ -45,8 +55,8 @@ public class VotacaoController {
     @ApiResponse(responseCode = "404", description = "Pauta não encontrada")
     @ApiResponse(responseCode = "422", description = "Já existe uma sessão para a pauta")
     @ResponseStatus(HttpStatus.CREATED)
-    public SessaoVotacao abrir(@RequestBody @Valid SessaoDto dto) {
-        return service.abrirSessao(dto.idPauta(), dto.minutos());
+    public void abrir(@RequestBody @Valid SessaoDto dto) {
+        service.abrirSessao(dto.idPauta(), dto.minutos());
     }
 
     @PostMapping("/sessao/voto")
@@ -63,7 +73,8 @@ public class VotacaoController {
     @GetMapping("/pauta/{id}/resultado")
     @Operation(summary = "Obter resultado da votação")
     @ApiResponse(responseCode = "200", description = "Resultado da sessao de votação")
-    @ApiResponse(responseCode = "404", description = "Sessão não encontrada")
+    @ApiResponse(responseCode = "404", description = "Sessão não encontrada", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
+    @ApiResponse(responseCode = "422", description = "Sessão ainda está aberta", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
     public ResultadoDto resultado(@PathVariable Long id) {
         return service.resultado(id);
     }

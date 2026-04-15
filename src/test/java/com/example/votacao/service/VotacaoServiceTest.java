@@ -1,6 +1,6 @@
 package com.example.votacao.service;
 
-import com.example.votacao.client.CpfClientFake;
+import com.example.votacao.client.CpfClient;
 import com.example.votacao.config.exception.BusinessException;
 import com.example.votacao.config.exception.ResourceNotFoundException;
 import com.example.votacao.entity.Pauta;
@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -39,7 +41,7 @@ class VotacaoServiceTest {
         private PautaRepository pautaRepository;
 
         @Mock
-        private CpfClientFake cpfClient;
+        private CpfClient cpfClient;
 
         @BeforeEach
         void setup() {
@@ -52,7 +54,9 @@ class VotacaoServiceTest {
 
                 SessaoVotacao sessao = new SessaoVotacao();
                 sessao.setId(1L);
-                sessao.setFim(LocalDateTime.now().minusMinutes(1));
+                Instant inicio = Instant.now();
+                sessao.setInicio(inicio);
+                sessao.setFim(inicio.minus(Duration.ofMinutes(1)));
 
                 when(sessaoRepository.findByPautaId(1L))
                                 .thenReturn(Optional.of(sessao));
@@ -70,7 +74,9 @@ class VotacaoServiceTest {
         void deveLancarExcecaoQuandoAssociadoJaVotou() {
 
                 SessaoVotacao sessao = new SessaoVotacao();
-                sessao.setFim(LocalDateTime.now().plusMinutes(1));
+                Instant inicio = Instant.now();
+                sessao.setInicio(inicio);
+                sessao.setFim(inicio.plus(Duration.ofMinutes(1)));
 
                 when(sessaoRepository.findByPautaId(1L))
                                 .thenReturn(Optional.of(sessao));
@@ -91,7 +97,9 @@ class VotacaoServiceTest {
         void deveLancarExcecaoQuandoCPFInvalido() {
 
                 SessaoVotacao sessao = new SessaoVotacao();
-                sessao.setFim(LocalDateTime.now().plusMinutes(1));
+                Instant inicio = Instant.now();
+                sessao.setInicio(inicio);
+                sessao.setFim(inicio.plus(Duration.ofMinutes(1)));
 
                 when(sessaoRepository.findByPautaId(1L))
                                 .thenReturn(Optional.of(sessao));
@@ -113,7 +121,9 @@ class VotacaoServiceTest {
         void deveLancarExcecaoQuandoUsuarioNaoPodeVotar() {
 
                 SessaoVotacao sessao = new SessaoVotacao();
-                sessao.setFim(LocalDateTime.now().plusMinutes(1));
+                Instant inicio = Instant.now();
+                sessao.setInicio(inicio);
+                sessao.setFim(inicio.plus(Duration.ofMinutes(1)));
 
                 when(sessaoRepository.findByPautaId(1L))
                                 .thenReturn(Optional.of(sessao));
@@ -134,8 +144,9 @@ class VotacaoServiceTest {
         void deveRegistrarVotoComSucesso() {
 
                 SessaoVotacao sessao = new SessaoVotacao();
-                sessao.setFim(LocalDateTime.now().plusMinutes(1));
-                sessao.setPauta(new Pauta());
+                Instant inicio = Instant.now();
+                sessao.setInicio(inicio);
+                sessao.setFim(inicio.plus(Duration.ofMinutes(1)));
 
                 when(sessaoRepository.findByPautaId(1L))
                                 .thenReturn(Optional.of(sessao));
@@ -148,6 +159,6 @@ class VotacaoServiceTest {
 
                 service.votar(1L, "123", TipoVoto.SIM);
 
-                verify(votoRepository, times(1)).save(any(Voto.class));
+                verify(votoRepository, times(1)).saveAndFlush(any(Voto.class));
         }
 }
